@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>สารบัญ — sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Prompt:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◧</span>
+      <span class="brand-name">สารบัญ</span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="auth" id="authSection">
+      <div class="auth-inner">
+        <h1 class="intake-eyebrow">sign in</h1>
+        <form id="signinForm">
+          <label class="field-label" for="signinEmail">Email</label>
+          <input class="field-input" type="email" id="signinEmail" autocomplete="username" required />
+          <label class="field-label" for="signinPassword">Password</label>
+          <input class="field-input" type="password" id="signinPassword" autocomplete="current-password" required minlength="10" />
+          <button class="btn-primary" type="submit" id="signinSubmit">sign in</button>
+        </form>
+        <p class="auth-hint">Contact admin</p>
+        <p class="auth-error" id="signinError" hidden></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>TNG41</span>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script src="signin.js"></script>
+</body>
+</html>

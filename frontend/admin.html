@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>สารบัญ — admin panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Prompt:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◧</span>
+      <span class="brand-name">สารบัญ</span>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" data-authed-only hidden>☰</button>
+    <nav class="nav" id="siteNav" data-authed-only hidden>
+      <a class="nav-link" href="index.html">upload</a>
+      <a class="nav-link" href="documents.html">documents</a>
+      <a class="nav-link active" href="admin.html" id="navAdminLink" hidden>admin panel</a>
+    </nav>
+    <div class="topbar-user" id="topbarUser" hidden>
+      <span class="role-badge" id="roleBadge">user</span>
+      <span class="user-email-wrap">
+        <span class="user-email" id="userEmail"></span>
+        <button class="change-password-trigger" id="changePasswordTrigger" type="button" title="Change password" aria-label="Change password">✎</button>
+      </span>
+      <button class="btn-ghost" id="logoutBtn" type="button">log out</button>
+    </div>
+  </header>
+
+  <main class="stage stage-wide">
+    <div class="layout" data-authed-only hidden>
+      <aside class="sidebar" id="adminSidebar" hidden>
+        <section class="create-account" id="createAccountSection">
+          <p class="section-eyebrow">create account</p>
+          <form id="createAccountForm">
+            <label class="field-label" for="newUserEmail">Email</label>
+            <input class="field-input" type="email" id="newUserEmail" autocomplete="off" required />
+            <label class="field-label" for="newUserPassword">Temporary password</label>
+            <input class="field-input" type="password" id="newUserPassword" autocomplete="new-password" required minlength="10" />
+            <label class="field-label" for="newUserRole">Role</label>
+            <select class="field-input" id="newUserRole">
+              <option value="user" selected>user</option>
+              <option value="officer">officer</option>
+              <option value="executive">executive</option>
+              <option value="admin">admin</option>
+            </select>
+            <button class="btn-primary" type="submit" id="createAccountSubmit">create account</button>
+          </form>
+          <p class="auth-error" id="createAccountError" hidden></p>
+          <p class="create-account-success" id="createAccountSuccess" hidden></p>
+        </section>
+      </aside>
+
+      <main class="main-content">
+        <section class="admin-gate" id="adminGate" hidden>
+          <p class="section-eyebrow">access</p>
+          <h1>Admins only</h1>
+          <p class="intake-hint">Your account doesn't have admin access. Ask an existing admin to promote you from this panel.</p>
+        </section>
+
+        <section class="admin" id="adminContent" hidden>
+          <p class="section-eyebrow">users</p>
+          <div class="table-scroll">
+            <table class="user-table" id="userTable">
+              <thead>
+                <tr><th>email</th><th>role</th><th>status</th><th></th></tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+          <p class="create-account-success" id="resetPasswordResult" hidden></p>
+        </section>
+      </main>
+    </div>
+
+    <p class="error-banner" id="errorBanner" hidden></p>
+  </main>
+
+  <footer class="footer">
+    <span>TNG41</span>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: document_reader
+      POSTGRES_USER: doc_reader_app
+      POSTGRES_PASSWORD: change-me
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U doc_reader_app -d document_reader"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      PGHOST: db
+      PGPORT: 5432
+      PGDATABASE: document_reader
+      PGUSER: doc_reader_app
+      PGPASSWORD: change-me
+      JWT_SECRET: dev-only-change-me-in-every-real-environment
+      JWT_COOKIE_NAME: dr_session
+      JWT_EXPIRES_IN: 8h
+      BOOTSTRAP_ADMIN_EMAILS: admin@example.com
+    volumes:
+      - uploads-data:/app/uploads
+    ports:
+      - "4000:4000"
+
+volumes:
+  db-data:
+  uploads-data:

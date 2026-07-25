@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>สารบัญ — อัพโหลด</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Prompt:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◧</span>
+      <span class="brand-name">สารบัญ</span>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" data-authed-only hidden>☰</button>
+    <nav class="nav" id="siteNav" data-authed-only hidden>
+      <a class="nav-link active" href="index.html">upload</a>
+      <a class="nav-link" href="documents.html">documents</a>
+      <a class="nav-link" href="admin.html" id="navAdminLink" hidden>admin panel</a>
+    </nav>
+    <div class="topbar-user" id="topbarUser" hidden>
+      <span class="role-badge" id="roleBadge">user</span>
+      <span class="user-email-wrap">
+        <span class="user-email" id="userEmail"></span>
+        <button class="change-password-trigger" id="changePasswordTrigger" type="button" title="Change password" aria-label="Change password">✎</button>
+      </span>
+      <button class="btn-ghost" id="logoutBtn" type="button">log out</button>
+    </div>
+  </header>
+
+  <main class="stage stage-wide">
+    <div class="layout app" id="appSection" data-authed-only hidden>
+      <aside class="sidebar">
+        <section class="intake" id="intake">
+          <div class="intake-inner" id="dropzone">
+            <p class="intake-eyebrow">upload</a>
+            <h1>Drop a PDF or image</h1>
+            <p class="intake-hint">.pdf · .png · .jpg · .webp — up to 20MB. Preview it, then confirm to upload.</p>
+            <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.webp" hidden />
+            <button class="btn-primary" id="browseBtn" type="button">choose file</button>
+            <p class="intake-filename" id="fileName"></p>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main-content">
+        <section class="viewer" id="viewerSection" hidden>
+          <p class="section-eyebrow" id="viewerEyebrow">02 — viewing</p>
+          <div class="viewer-toolbar">
+            <p class="viewer-filename" id="viewerFilename">—</p>
+            <div class="viewer-actions">
+              <button class="btn-primary" id="confirmUploadBtn" type="button" hidden>confirm upload</button>
+              <button class="btn-ghost" id="cancelPreviewBtn" type="button" hidden>cancel</button>
+              <button class="btn-primary" id="scanBtn" type="button" hidden>scan to text</button>
+              <a class="btn-ghost" id="downloadBtn" type="button" hidden>download</a>
+              <button class="btn-ghost" id="deleteBtn" type="button" hidden>delete</button>
+              <button class="btn-ghost" id="resetBtn" type="button" hidden>upload another</button>
+            </div>
+          </div>
+          <div class="viewer-frame-wrap" id="viewerFrameWrap"></div>
+        </section>
+
+        <section class="queue" id="queue" hidden>
+          <p class="section-eyebrow">03 — scanning to text</p>
+          <div class="queue-row">
+            <div class="queue-meta">
+              <p class="queue-filename">extracting text…</p>
+              <p class="queue-status" id="queueStatus">queued</p>
+            </div>
+            <div class="scan-bar">
+              <div class="scan-bar-fill"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="result" id="result" hidden>
+          <p class="section-eyebrow">04 — extracted text</p>
+          <div class="result-tabs" id="pageTabs"></div>
+          <pre class="result-body" id="resultBody"></pre>
+          <div class="result-actions">
+            <button class="btn-ghost" id="copyBtn" type="button">copy text</button>
+            <button class="btn-ghost" id="hideTextBtn" type="button">hide text</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <p class="error-banner" id="errorBanner" hidden></p>
+  </main>
+
+  <footer class="footer">
+    <span>TNG41</span>
+  </footer>
+
+  <script src="shared.js"></script>
+  <script src="reader.js"></script>
+</body>
+</html>
