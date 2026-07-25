@@ -4,8 +4,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: document_reader
-      POSTGRES_USER: doc_reader_app
-      POSTGRES_PASSWORD: change-me
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0639562544
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -30,8 +30,8 @@ services:
       PGHOST: db
       PGPORT: 5432
       PGDATABASE: document_reader
-      PGUSER: doc_reader_app
-      PGPASSWORD: change-me
+      PGUSER: postgres
+      PGPASSWORD: 0639562544
       JWT_SECRET: dev-only-change-me-in-every-real-environment
       JWT_COOKIE_NAME: dr_session
       JWT_EXPIRES_IN: 8h
