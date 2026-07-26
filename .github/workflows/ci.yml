@@ -95,9 +95,5 @@ jobs:
             ghcr.io/${{ env.REPO_LC }}/document-reader-api:latest
             ghcr.io/${{ env.REPO_LC }}/document-reader-api:${{ github.sha }}
 
-      # Deploy step is deliberately left as a placeholder: a real pipeline
-      # would call out to the staging host / k8s cluster / ECS service here,
-      # using secrets stored in the repo's Environments (SIT, UAT, Production)
-      # rather than in this file.
       - name: Deploy to staging (placeholder)
         run: echo "Trigger staging deploy via SSH, kubectl, or your platform's CLI here"
