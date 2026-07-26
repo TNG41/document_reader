@@ -6,6 +6,7 @@ const fileNameEl = document.getElementById('fileName');
 const viewerSection = document.getElementById('viewerSection');
 const viewerEyebrow = document.getElementById('viewerEyebrow');
 const viewerFilename = document.getElementById('viewerFilename');
+const viewerFilenameInput = document.getElementById('viewerFilenameInput');
 const viewerFrameWrap = document.getElementById('viewerFrameWrap');
 const confirmUploadBtn = document.getElementById('confirmUploadBtn');
 const cancelPreviewBtn = document.getElementById('cancelPreviewBtn');
@@ -100,11 +101,15 @@ function backToIntake() {
   viewerFrameWrap.innerHTML = '';
   fileNameEl.textContent = '';
   fileInput.value = '';
+  viewerFilenameInput.value = '';
   setViewerMode('preview');
 }
 
 // Toggles which action buttons are visible: 'preview' (staged, not yet
 // uploaded — confirm/cancel) or 'viewing' (uploaded — scan/delete/reset).
+// Also toggles the filename between an editable input (preview — you can
+// rename before it's ever sent to the server) and plain text (viewing —
+// the name is already saved, no longer editable here).
 function setViewerMode(mode) {
   const isPreview = mode === 'preview';
   confirmUploadBtn.hidden = !isPreview;
@@ -113,6 +118,8 @@ function setViewerMode(mode) {
   downloadBtn.hidden = isPreview;
   deleteBtn.hidden = isPreview;
   resetBtn.hidden = isPreview;
+  viewerFilename.hidden = isPreview;
+  viewerFilenameInput.hidden = !isPreview;
   viewerEyebrow.textContent = isPreview ? '02 — preview (not yet uploaded)' : '02 — viewing';
   confirmUploadBtn.disabled = false;
   confirmUploadBtn.textContent = 'confirm upload';
@@ -129,6 +136,7 @@ function stageFile(file) {
   previewUrl = URL.createObjectURL(file);
 
   viewerFilename.textContent = file.name;
+  viewerFilenameInput.value = file.name;
   viewerFrameWrap.innerHTML = '';
   if (file.type === 'application/pdf') {
     viewerFrameWrap.appendChild(buildPdfViewer(previewUrl, file.name));
@@ -157,8 +165,10 @@ async function handleFile(file) {
 
   if (!csrfToken) await fetchCsrfToken();
 
+  const renamedTo = viewerFilenameInput.value.trim() || file.name;
+
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', file, renamedTo);
 
   try {
     const res = await fetch(`${API_BASE}/documents`, {
