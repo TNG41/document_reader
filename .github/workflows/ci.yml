@@ -74,7 +74,7 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set lowercase repo name
         run: echo "REPO_LC=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
 
@@ -92,12 +92,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/document-reader-api:latest
-            ghcr.io/${{ github.repository }}/document-reader-api:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LC }}/document-reader-api:latest
+            ghcr.io/${{ env.REPO_LC }}/document-reader-api:${{ github.sha }}
 
-      # Deploy step is deliberately left as a placeholder: a real pipeline
-      # would call out to the staging host / k8s cluster / ECS service here,
-      # using secrets stored in the repo's Environments (SIT, UAT, Production)
-      # rather than in this file.
       - name: Deploy to staging (placeholder)
         run: echo "Trigger staging deploy via SSH, kubectl, or your platform's CLI here"
