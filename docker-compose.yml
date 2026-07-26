@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: document_reader
       POSTGRES_USER: doc_reader_app
-      POSTGRES_PASSWORD: change-me
+      POSTGRES_PASSWORD: are9562544
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -31,17 +31,29 @@ services:
       PGPORT: 5432
       PGDATABASE: document_reader
       PGUSER: doc_reader_app
-      PGPASSWORD: change-me
+      PGPASSWORD: are9562544
       JWT_SECRET: dev-only-change-me-in-every-real-environment
       JWT_COOKIE_NAME: dr_session
       JWT_EXPIRES_IN: 8h
       BOOTSTRAP_ADMIN_EMAILS: admin@example.com
       BOOTSTRAP_ADMIN_EMAIL: admin@example.com
-      BOOTSTRAP_ADMIN_PASSWORD: change-me-too-1234
+      BOOTSTRAP_ADMIN_PASSWORD: areosis123
     volumes:
       - uploads-data:/app/uploads
     ports:
-      - "4000:4000"
+      - "4000"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    ports:
+      - "4000:80"
+      - "443:443"
 
 volumes:
   db-data:

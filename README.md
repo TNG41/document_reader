@@ -55,15 +55,58 @@ For active development, `npm run dev` uses nodemon to restart on file changes.
 ## Running it with Docker (optional)
 
 If you'd rather not install Postgres locally, `docker-compose.yml` runs
-Postgres + the API (which still serves the frontend) in containers:
+Postgres + the API (which still serves the frontend) in containers, behind
+an nginx reverse proxy/load balancer:
 
 ```bash
 docker compose up --build
 docker compose exec api npm run migrate   # first run only
 ```
 
-Then open http://localhost:4000, same as above — there's no separate
-frontend container or port to worry about.
+Then open http://localhost:4000, same as above — nginx is the only thing
+bound to that host port; `api` itself has no host port anymore (see
+`expose:` in docker-compose.yml).
+
+**Scaling out:** the app is stateless (JWT auth, no server-side session
+store, uploads on a shared named volume), so you can run more than one
+`api` replica and nginx will spread requests across all of them:
+
+```bash
+docker compose up --build --scale api=3
+```
+
+`nginx.conf` re-resolves the `api` service name through Docker's embedded
+DNS on every request (rather than caching one IP at nginx startup), so it
+picks up replicas you add or remove without needing a restart. One real
+limit worth knowing: the OCR extraction path (`services/extraction.js`)
+spawns an unbounded Tesseract worker per image upload with no queue, so
+more replicas gives you more *concurrent capacity*, but each individual
+replica can still be saturated by a burst of image uploads landing on it.
+
+**HTTPS:** nginx terminates TLS and redirects plain HTTP to HTTPS. Before
+your first `docker compose up`, generate a local dev cert once:
+
+```bash
+sh certs/generate-dev-cert.sh
+docker compose up --build
+```
+
+Then open **https://localhost** (port 443) — http://localhost:4000 now
+just redirects there. Since the cert is self-signed, your browser will
+show a security warning; that's expected for local dev, click through it.
+The generated `certs/*.pem` files are gitignored on purpose — never commit
+a private key, even a throwaway self-signed one.
+
+For a real deployment on a real domain, swap the self-signed cert for a
+[Let's Encrypt](https://letsencrypt.org/) one instead (free, trusted by
+browsers, auto-renewable): run `certbot` to obtain
+`fullchain.pem`/`privkey.pem` for your domain, drop them in `certs/` under
+those names (or update the `ssl_certificate`/`ssl_certificate_key` paths
+in `nginx.conf` to match), and set up a renewal cron job (`certbot renew`)
+since Let's Encrypt certs expire every 90 days. Also worth flipping
+`NODE_ENV: production` on the `api` service at that point — the session
+and CSRF cookies only set the `Secure` flag (never sent over plain HTTP)
+when that's set (see `middleware/auth.js` / `middleware/csrf.js`).
 
 ## How this maps to each requirement
 

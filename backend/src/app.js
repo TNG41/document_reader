@@ -29,6 +29,14 @@ process.on('unhandledRejection', (reason) => {
 
 const app = express();
 
+// Requests now arrive via the nginx service (see docker-compose.yml),
+// not directly from clients. Without this, req.ip would be nginx's own
+// container IP for every request — collapsing the per-IP auth rate
+// limiter below into one shared bucket for all users. `1` trusts exactly
+// one hop (the nginx container), reading the real client IP from the
+// X-Forwarded-For header nginx sets in nginx.conf.
+app.set('trust proxy', 1);
+
 // --- Security headers (mitigates a chunk of XSS/clickjacking classes for free) ---
 app.use(helmet({
   // Same-origin static frontend + API means we can run a real CSP instead
