@@ -5,4 +5,3 @@ backend/uploads/
 .DS_Store
 coverage/
 README.md
-docker-compose.yml
