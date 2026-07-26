@@ -1,4 +1,4 @@
-# Scanline — a full-stack document reader
+# A full-stack document reader
 
 Upload a PDF or image and it opens immediately in the browser — text
 extraction ("scan to text") is a separate, on-demand step, not something
